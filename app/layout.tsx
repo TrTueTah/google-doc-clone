@@ -1,7 +1,7 @@
-import "./globals.css";
 import { Inter as FontSans } from "next/font/google";
 
 import { cn } from "@/lib/utils";
+import "./globals.css";
 import { Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
@@ -12,10 +12,11 @@ const fontSans = FontSans({
   variable: "--font-sans",
 });
 
-export const metedata: Metadata = {
-  title: "LiveDoc",
-  description: "LiveDoc is a documentation tool for developers.",
+export const metadata: Metadata = {
+  title: "LiveDocs",
+  description: "Your go-to collaborative editor",
 };
+
 export default function RootLayout({
   children,
 }: {
