@@ -1,4 +1,5 @@
 "use client";
+
 import { ClientSideSuspense, RoomProvider } from "@liveblocks/react/suspense";
 import { Editor } from "@/components/editor/Editor";
 import Header from "@/components/Header";
@@ -17,27 +18,29 @@ const CollaborativeRoom = ({
   users,
   currentUserType,
 }: CollaborativeRoomProps) => {
-  const [documentTitle, setDocumentTitle] = useState(roomMetadata?.title);
+  const [documentTitle, setDocumentTitle] = useState(roomMetadata.title);
   const [editing, setEditing] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const updateTitleHandler = async (
     e: React.KeyboardEvent<HTMLInputElement>
   ) => {
     if (e.key === "Enter") {
       setLoading(true);
+
       try {
-        if (documentTitle !== roomMetadata?.title) {
+        if (documentTitle !== roomMetadata.title) {
           const updatedDocument = await updateDocument(roomId, documentTitle);
+
           if (updatedDocument) {
             setEditing(false);
           }
         }
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
 
       setLoading(false);
@@ -54,8 +57,11 @@ const CollaborativeRoom = ({
         updateDocument(roomId, documentTitle);
       }
     };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
     return () => {
-      document.addEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [roomId, documentTitle]);
 
@@ -110,12 +116,14 @@ const CollaborativeRoom = ({
             </div>
             <div className="flex w-full flex-1 justify-end gap-2 sm:gap-3">
               <ActiveCollaborators />
+
               <ShareModal
                 roomId={roomId}
                 collaborators={users}
                 creatorId={roomMetadata.creatorId}
                 currentUserType={currentUserType}
               />
+
               <SignedOut>
                 <SignInButton />
               </SignedOut>
